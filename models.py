@@ -94,7 +94,7 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     ### YOUR CODE HERE
 
     # set up all layer outputs
-    outputs['conv1'],outputs['conv1_kernel']  = conv(outputs['images'], 96, 11, 4, padding='VALID', layer = 'conv1')
+    outputs['conv1'],outputs['conv1_kernel']  = conv(input_to_network, 96, 11, 4, padding='VALID', layer = 'conv1')
     lrn1 = outputs['conv1']
     if norm:
         lrn1 = lrn(outputs['conv1'], depth_radius=5, bias=1, alpha=.0001, beta=.75, layer='conv1')
