@@ -79,10 +79,10 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
 
     # rotations
     rotation_labels = np.random.randint(0, 4, batch_size,dtype='int32')
-    input_to_network = tf.contrib.image.rotate(
-        inputs['images'],
-        rotation_labels * 1.5708,
-        )
+    #input_to_network = tf.contrib.image.rotate(
+    #    inputs['images'],
+    #    rotation_labels * 1.5708,
+    #    )
     #input_to_network = tf.map_fn(
     #    lambda x: tf.image.rot90(x[0], x[1]), 
     #    (inputs['images'], rotation_labels), 
