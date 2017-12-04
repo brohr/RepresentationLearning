@@ -23,7 +23,7 @@ class ImageNetExperiment():
         Please set the seed to your group number. You can also change the batch
         size and n_epochs if you want but please do not change the rest.
         """
-        batch_size = 256
+        batch_size = 128
         data_path = '/datasets/TFRecord_Imagenet_standard'
         seed = 6
         crop_size = 227
@@ -191,8 +191,11 @@ class ImageNetExperiment():
         # we fill in global step outside of this!
         params['learning_rate_params'] = {
             'func': piecewise_constant_wrapper,
-            'boundaries': list(np.array([150000, 300000, 450000]).astype(np.int64)),
-            'values': [0.01, 0.005, 0.001, 0.0005]
+            'boundaries': list(np.array([
+                np.ceil(self.Config.train_steps * 0.3), 
+                np.ceil(self.Configtrain_steps * 0.6), 
+                np.ceil(self.Configtrain_steps * 0.8)]).astype(np.int64)),
+            'values': [0.1, 0.02, 0.004, 0.0008]
         }
         """
         optimizer_params defines the optimizer.
