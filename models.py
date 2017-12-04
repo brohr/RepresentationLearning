@@ -85,7 +85,7 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     #    rotation_labels * 1.5708, # roation in radians
     #    )
     rotated_ims = tf.map_fn(
-        lambda x: (x[0], tf.image.rot90(x[0], 1) , tf.image.rot90(x[0], 2), tf.image.rot90(x[0], 3)), 
+        lambda x: (x, tf.image.rot90(x, 1) , tf.image.rot90(x, 2), tf.image.rot90(x, 3)), 
         inputs['images'], 
         dtype=tf.float32
         )
