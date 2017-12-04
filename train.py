@@ -193,8 +193,8 @@ class ImageNetExperiment():
             'func': piecewise_constant_wrapper,
             'boundaries': list(np.array([
                 np.ceil(self.Config.train_steps * 0.3), 
-                np.ceil(self.Configtrain_steps * 0.6), 
-                np.ceil(self.Configtrain_steps * 0.8)]).astype(np.int64)),
+                np.ceil(self.Config.train_steps * 0.6), 
+                np.ceil(self.Config.train_steps * 0.8)]).astype(np.int64)),
             'values': [0.1, 0.02, 0.004, 0.0008]
         }
         """
