@@ -78,18 +78,18 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     batch_size = inputs['images'].get_shape().as_list()[0]
 
     # rotations
-    #rotation_labels = np.random.randint(0, 4, batch_size,dtype='int32')
-    rotation_labels = np.array([0,1,2,3] * batch_size, dtype = np.int32)
-    #input_to_network = tf.contrib.image.rotate(
-    #    inputs['images'],
-    #    rotation_labels * 1.5708, # roation in radians
-    #    )
-    rotated_ims = tf.map_fn(
-        lambda x: (x, tf.image.rot90(x, 1) , tf.image.rot90(x, 2), tf.image.rot90(x, 3)), 
-        inputs['images'], 
-        dtype=(tf.float32, tf.float32, tf.float32, tf.float32)
+    rotation_labels = np.random.randint(0, 4, batch_size,dtype='int32')
+    #rotation_labels = np.array([0,1,2,3] * batch_size, dtype = np.int32)
+    input_to_network = tf.contrib.image.rotate(
+        inputs['images'],
+        rotation_labels * 1.5708, # roation in radians
         )
-    input_to_network = tf.concat(rotated_ims, 0) # concat the results
+    #rotated_ims = tf.map_fn(
+    #    lambda x: (x, tf.image.rot90(x, 1) , tf.image.rot90(x, 2), tf.image.rot90(x, 3)), 
+    #    inputs['images'], 
+    #    dtype=(tf.float32, tf.float32, tf.float32, tf.float32)
+    #    )
+    #input_to_network = tf.concat(rotated_ims, 0) # concat the results
     outputs['labels_rotation'] = rotation_labels
     ### YOUR CODE HERE
 
