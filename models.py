@@ -75,8 +75,12 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     # propagate input targets
     outputs = inputs
     dropout = .5 if train else None
-    input_to_network = inputs['images']
+    batch_size = inputs['images'].get_shape().as_list()[0]
 
+    # rotations
+    rotation_labels = np.random.randint(0, 4, batch_size)
+    input_to_network = tf.map_fn(lambda x: tf.image.rot90(x[0], x[1]), (inputs['images'], rotation_labels))
+    outputs['labels_rotation'] = rotation_labels
     ### YOUR CODE HERE
 
     # set up all layer outputs
@@ -102,10 +106,10 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     outputs['fc7'] = fc(outputs['fc6'],256, dropout=dropout, bias=.1, layer = 'fc7')
     outputs['fc8'] = fc(outputs['fc7'],4, activation=None, dropout=None, bias=0, layer = 'fc8')
 
-    outputs['pred'] = outputs['fc8']
+    outputs['pred_rotation'] = outputs['fc8']
     
     for k in ['conv1', 'conv2', 'conv3', 'conv4', 'conv5', 'pool1',
-            'pool2', 'pool5', 'fc6', 'fc7', 'fc8', 'conv1_kernel', 'pred']:
+            'pool2', 'pool5', 'fc6', 'fc7', 'fc8', 'conv1_kernel', 'pred_rotation']:
         assert k in outputs, '%s was not found in outputs' % k
     return outputs, {}
         #    return outputs['pred'], {}
