@@ -23,7 +23,7 @@ class ImageNetExperiment():
         Please set the seed to your group number. You can also change the batch
         size and n_epochs if you want but please do not change the rest.
         """
-        batch_size = 128
+        batch_size = 256
         data_path = '/datasets/TFRecord_Imagenet_standard'
         seed = 6
         crop_size = 227

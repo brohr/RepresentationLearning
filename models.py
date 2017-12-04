@@ -78,6 +78,63 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     batch_size = inputs['images'].get_shape().as_list()[0]
 
     # rotations
+    #rotation_labels = np.random.randint(0, 4, batch_size,dtype='int32')
+    rotation_labels = np.array([0,1,2,3] * batch_size, dtype = np.int32)
+    #input_to_network = tf.contrib.image.rotate(
+    #    inputs['images'],
+    #    rotation_labels * 1.5708, # roation in radians
+    #    )
+    rotated_ims = tf.map_fn(
+        lambda x: (x[0], tf.image.rot90(x[0], 1) , tf.image.rot90(x[0], 2), tf.image.rot90(x[0], 3)), 
+        inputs['images'], 
+        dtype=tf.float32
+        )
+    input_to_network = tf.concat(rotated_ims, 0) # concat the results
+    outputs['labels_rotation'] = rotation_labels
+    ### YOUR CODE HERE
+
+    # set up all layer outputs
+    outputs['conv1'],outputs['conv1_kernel']  = conv(outputs['images'], 96, 11, 4, padding='VALID', layer = 'conv1')
+    lrn1 = outputs['conv1']
+    if norm:
+        lrn1 = lrn(outputs['conv1'], depth_radius=5, bias=1, alpha=.0001, beta=.75, layer='conv1')
+    outputs['pool1'] = max_pool(lrn1, 3, 2, layer = 'pool1')
+    
+    
+    outputs['conv2'], outputs['conv2_kernel'] = conv(outputs['pool1'], 256, 5, 1, layer = 'conv2')
+    lrn2 = outputs['conv2']
+    if norm:
+        lrn2 = lrn(outputs['conv2'], depth_radius=5, bias=1, alpha=.0001, beta=.75, layer='conv2')
+
+    outputs['pool2'] = max_pool(lrn2, 3, 2, layer = 'pool2')
+    outputs['conv3'],outputs['conv3_kernel'] = conv(outputs['pool2'], 384, 3, 1, layer = 'conv3')
+    outputs['conv4'],outputs['conv4_kernel'] = conv(outputs['conv3'], 384, 3, 1, layer = 'conv4')
+    outputs['conv5'],outputs['conv5_kernel'] = conv(outputs['conv4'], 256, 3, 1, layer = 'conv5')
+    outputs['pool5'] = max_pool(outputs['conv5'], 3, 2, layer = 'pool5')
+
+    outputs['fc6'] = fc(outputs['pool5'], 256, dropout=dropout, bias=.1, layer = 'fc6')
+    outputs['fc7'] = fc(outputs['fc6'],256, dropout=dropout, bias=.1, layer = 'fc7')
+    outputs['fc8'] = fc(outputs['fc7'],4, activation=None, dropout=None, bias=0, layer = 'fc8')
+
+    outputs['pred_rotation'] = outputs['fc8']
+    
+    for k in ['conv1', 'conv2', 'conv3', 'conv4', 'conv5', 'pool1',
+            'pool2', 'pool5', 'fc6', 'fc7', 'fc8', 'conv1_kernel', 'pred_rotation']:
+        assert k in outputs, '%s was not found in outputs' % k
+    return outputs, {}
+        #    return outputs['pred'], {}
+
+def multitask_model(inputs, train=True, norm=True, **kwargs):
+    """
+    Vanilla AlexNet
+    """
+
+    # propagate input targets
+    outputs = inputs
+    dropout = .5 if train else None
+    batch_size = inputs['images'].get_shape().as_list()[0]
+
+    # rotations
     rotation_labels = np.random.randint(0, 4, batch_size,dtype='int32')
     input_to_network = tf.contrib.image.rotate(
         inputs['images'],
@@ -110,15 +167,19 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     outputs['conv5'],outputs['conv5_kernel'] = conv(outputs['conv4'], 256, 3, 1, layer = 'conv5')
     outputs['pool5'] = max_pool(outputs['conv5'], 3, 2, layer = 'pool5')
 
-    outputs['fc6'] = fc(outputs['pool5'], 256, dropout=dropout, bias=.1, layer = 'fc6')
-    outputs['fc7'] = fc(outputs['fc6'],256, dropout=dropout, bias=.1, layer = 'fc7')
-    outputs['fc8'] = fc(outputs['fc7'],4, activation=None, dropout=None, bias=0, layer = 'fc8')
+    # rotation head
+    outputs['fc6_rot'] = fc(outputs['pool5'], 256, dropout=dropout, bias=.1, layer = 'fc6')
+    outputs['fc7_rot'] = fc(outputs['fc6_rot'],256, dropout=dropout, bias=.1, layer = 'fc7')
+    outputs['fc8_rot'] = fc(outputs['fc7_rot'],4, activation=None, dropout=None, bias=0, layer = 'fc8')
+    outputs['pred_rotation'] = outputs['fc8_rot']
 
-    outputs['pred_rotation'] = outputs['fc8']
-    
-    for k in ['conv1', 'conv2', 'conv3', 'conv4', 'conv5', 'pool1',
-            'pool2', 'pool5', 'fc6', 'fc7', 'fc8', 'conv1_kernel', 'pred_rotation']:
-        assert k in outputs, '%s was not found in outputs' % k
+    # classification head
+    outputs['fc6_clf'] = fc(outputs['pool5'], 4096, dropout=dropout, bias=.1, layer = 'fc6')
+    outputs['fc7_clf'] = fc(outputs['fc6_clf'],4096, dropout=dropout, bias=.1, layer = 'fc7')
+    outputs['fc8_clf'] = fc(outputs['fc7_clf'],1000, activation=None, dropout=None, bias=0, layer = 'fc8')
+    outputs['pred'] = outputs['fc8_clf']
+
+
     return outputs, {}
         #    return outputs['pred'], {}
 
