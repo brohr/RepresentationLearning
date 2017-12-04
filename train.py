@@ -23,7 +23,7 @@ class ImageNetExperiment():
         Please set the seed to your group number. You can also change the batch
         size and n_epochs if you want but please do not change the rest.
         """
-        batch_size = 256
+        batch_size = 128
         data_path = '/datasets/TFRecord_Imagenet_standard'
         seed = 6
         crop_size = 227
@@ -224,7 +224,7 @@ class ImageNetExperiment():
             'port': 24444,
             'dbname': 'imagenet',
             'collname': 'rotation',
-            'exp_id': 'exp0',
+            'exp_id': 'exp1',
             'save_valid_freq': 10000,
             'save_filters_freq': 30000,
             'cache_filters_freq': 50000,
@@ -248,7 +248,7 @@ class ImageNetExperiment():
             'port': 24444,
             'dbname': 'imagenet',
             'collname': 'rotation',
-            'exp_id': 'exp0',
+            'exp_id': 'exp1',
             'do_restore': True,
             'load_query': None,
         }
