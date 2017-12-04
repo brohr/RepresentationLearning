@@ -87,7 +87,7 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     rotated_ims = tf.map_fn(
         lambda x: (x, tf.image.rot90(x, 1) , tf.image.rot90(x, 2), tf.image.rot90(x, 3)), 
         inputs['images'], 
-        dtype=tf.float32
+        dtype=(tf.float32, tf.float32, tf.float32, tf.float32)
         )
     input_to_network = tf.concat(rotated_ims, 0) # concat the results
     outputs['labels_rotation'] = rotation_labels
