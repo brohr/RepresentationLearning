@@ -21,6 +21,3 @@ def multitask_loss(inputs, outputs):
     rot_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=outputs['labels_rotation'], logits=outputs['pred_rotation'])
     #reg_loss = tf.add_n(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
     return clf_loss + rot_loss #+ reg_loss
-
-def agg_loss(loss):
-    return tf.reduce_mean(loss) + tf.add_n(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
