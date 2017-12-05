@@ -27,7 +27,7 @@ class ImageNetExperiment():
         data_path = '/datasets/TFRecord_Imagenet_standard'
         seed = 6
         crop_size = 227
-        thres_loss = 1000
+        thres_loss = 1000000000000
         n_epochs = 90
         train_steps = ImageNetDataProvider.N_TRAIN / batch_size * n_epochs
         val_steps = np.ceil(ImageNetDataProvider.N_VAL / batch_size).astype(int)
@@ -225,7 +225,7 @@ class ImageNetExperiment():
             'dbname': 'imagenet',
             'collname': 'rotation',
             'exp_id': 'exp1',
-            'save_valid_freq': 10000,
+            'save_valid_freq': 5000,
             'save_filters_freq': 30000,
             'cache_filters_freq': 50000,
             'save_metrics_freq': 200,
