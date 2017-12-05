@@ -11,6 +11,9 @@ from dataprovider import ImageNetDataProvider
 from models import rotation_model
 from losses import rotation_loss
 
+def agg_loss(loss):
+    return tf.reduce_mean(loss) + tf.add_n(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
+
 class ImageNetExperiment():
     """
     Defines the ImageNet training experiment
@@ -299,9 +302,6 @@ class ImageNetExperiment():
         for k, v in res.items():
             agg_res[k].append(np.mean(v))
         return agg_res
-
-def agg_loss(loss):
-    return tf.reduce_mean(loss) + tf.add_n(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
 
        
 if __name__ == '__main__':
