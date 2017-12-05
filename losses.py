@@ -17,7 +17,7 @@ def rotation_loss(inputs, outputs):
     return rot_loss + reg_loss
 
 def multitask_loss(inputs, outputs):
-    clf_loss = classification_loss(inputs,outputs)
-    rot_loss = rotation_loss(intpus, outputs)
+    clf_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=outputs['labels'], logits=outputs['pred'])
+    rot_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=outputs['labels_rotation'], logits=outputs['pred_rotation'])
     reg_loss = tf.add_n(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
     return clf_loss + rot_loss + reg_loss
