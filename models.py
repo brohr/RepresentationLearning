@@ -136,6 +136,7 @@ def multitask_model(inputs, train=True, norm=True, **kwargs):
     outputs = inputs
     dropout = .5 if train else None
     batch_size = inputs['images'].get_shape().as_list()[0]
+    weight_decay = 0.0005
 
     # rotations
     rotation_labels = np.random.randint(0, 4, batch_size,dtype='int32')
