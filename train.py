@@ -226,7 +226,7 @@ class ImageNetExperiment():
             'collname': 'rotation',
             'exp_id': 'exp1',
             'save_valid_freq': 5000,
-            'save_filters_freq': 30000,
+            'save_filters_freq': 5000,
             'cache_filters_freq': 50000,
             'save_metrics_freq': 200,
             'save_initial_filters' : False,
