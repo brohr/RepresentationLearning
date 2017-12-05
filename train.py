@@ -250,7 +250,7 @@ class ImageNetExperiment():
             'collname': 'rotation',
             'exp_id': 'exp1',
             'do_restore': True,
-            'load_query': {'saved_filters': False},
+            'load_query': None,
         }
 
         return params
