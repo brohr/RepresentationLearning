@@ -266,10 +266,12 @@ class ImageNetExperiment():
         You will need to EDIT this part. Implement the top1 and top5 functions
         in the respective dictionary entry.
         """
-        return {'top1_rot': tf.nn.in_top_k(outputs['pred_rotation'], outputs['labels_rotation'], 1),
-                'top2_rot': tf.nn.in_top_k(outputs['pred_rotation'], outputs['labels_rotation'], 2)
-                'top1_clf': tf.nn.in_top_k(outputs['pred'], outputs['labels'], 1),
-                'top5_clf': tf.nn.in_top_k(outputs['pred'], outputs['labels'], 5)}
+        return {
+            'top1_rot': tf.nn.in_top_k(outputs['pred_rotation'], outputs['labels_rotation'], 1),
+            'top2_rot': tf.nn.in_top_k(outputs['pred_rotation'], outputs['labels_rotation'], 2),
+            'top1_clf': tf.nn.in_top_k(outputs['pred'], outputs['labels'], 1),
+            'top5_clf': tf.nn.in_top_k(outputs['pred'], outputs['labels'], 5),
+        }
 
 
     def subselect_tfrecords(self, path):
