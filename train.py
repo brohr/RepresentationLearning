@@ -9,7 +9,7 @@ import tensorflow as tf
 from tfutils import base, data, model, optimizer, utils
 from dataprovider import ImageNetDataProvider
 from models import rotation_model
-from losses import rotation_loss
+from losses import rotation_loss, agg_loss
 
 class ImageNetExperiment():
     """
@@ -160,7 +160,7 @@ class ImageNetExperiment():
         """
         params['loss_params'] = {
             'targets': ['labels'],
-            'agg_func': tf.reduce_mean,
+            'agg_func': agg_loss,
             'loss_per_case_func': rotation_loss,
             'loss_per_case_func_params' : {'_outputs': 'outputs', 
                 '_targets_$all': 'inputs'},
