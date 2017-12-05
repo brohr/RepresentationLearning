@@ -226,7 +226,7 @@ class ImageNetExperiment():
             'collname': 'rotation',
             'exp_id': 'exp1',
             'save_valid_freq': 5000,
-            'save_filters_freq': 5000,
+            'save_filters_freq': 30000,
             'cache_filters_freq': 50000,
             'save_metrics_freq': 200,
             'save_initial_filters' : False,
@@ -250,7 +250,7 @@ class ImageNetExperiment():
             'collname': 'rotation',
             'exp_id': 'exp1',
             'do_restore': True,
-            'load_query': {'exp_id': 'exp1'},
+            'load_query': {'saved_filters': False},
         }
 
         return params
