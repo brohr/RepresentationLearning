@@ -32,31 +32,33 @@ def alexnet_model(inputs, train=True, norm=True, **kwargs):
     outputs = inputs
     dropout = .5 if train else None
     input_to_network = inputs['images']
+    weight_decay = 0.0005
 
     ### YOUR CODE HERE
 
     # set up all layer outputs
-    outputs['conv1'],outputs['conv1_kernel']  = conv(outputs['images'], 96, 11, 4, padding='VALID', layer = 'conv1')
+    outputs['conv1'],outputs['conv1_kernel']  = conv(outputs['images'], 96, 11, 4, 
+        padding='VALID', layer = 'conv1', weight_decay=weight_decay)
     lrn1 = outputs['conv1']
     if norm:
         lrn1 = lrn(outputs['conv1'], depth_radius=5, bias=1, alpha=.0001, beta=.75, layer='conv1')
     outputs['pool1'] = max_pool(lrn1, 3, 2, layer = 'pool1')
     
     
-    outputs['conv2'], outputs['conv2_kernel'] = conv(outputs['pool1'], 256, 5, 1, layer = 'conv2')
+    outputs['conv2'], outputs['conv2_kernel'] = conv(outputs['pool1'], 256, 5, 1, layer = 'conv2', weight_decay=weight_decay)
     lrn2 = outputs['conv2']
     if norm:
         lrn2 = lrn(outputs['conv2'], depth_radius=5, bias=1, alpha=.0001, beta=.75, layer='conv2')
 
     outputs['pool2'] = max_pool(lrn2, 3, 2, layer = 'pool2')
-    outputs['conv3'],outputs['conv3_kernel'] = conv(outputs['pool2'], 384, 3, 1, layer = 'conv3')
-    outputs['conv4'],outputs['conv4_kernel'] = conv(outputs['conv3'], 384, 3, 1, layer = 'conv4')
-    outputs['conv5'],outputs['conv5_kernel'] = conv(outputs['conv4'], 256, 3, 1, layer = 'conv5')
+    outputs['conv3'],outputs['conv3_kernel'] = conv(outputs['pool2'], 384, 3, 1, layer = 'conv3', weight_decay=weight_decay)
+    outputs['conv4'],outputs['conv4_kernel'] = conv(outputs['conv3'], 384, 3, 1, layer = 'conv4', weight_decay=weight_decay)
+    outputs['conv5'],outputs['conv5_kernel'] = conv(outputs['conv4'], 256, 3, 1, layer = 'conv5', weight_decay=weight_decay)
     outputs['pool5'] = max_pool(outputs['conv5'], 3, 2, layer = 'pool5')
 
-    outputs['fc6'] = fc(outputs['pool5'], 4096, dropout=dropout, bias=.1, layer = 'fc6')
-    outputs['fc7'] = fc(outputs['fc6'],4096, dropout=dropout, bias=.1, layer = 'fc7')
-    outputs['fc8'] = fc(outputs['fc7'],1000, activation=None, dropout=None, bias=0, layer = 'fc8')
+    outputs['fc6'] = fc(outputs['pool5'], 4096, dropout=dropout, bias=.1, layer = 'fc6', weight_decay=weight_decay)
+    outputs['fc7'] = fc(outputs['fc6'],4096, dropout=dropout, bias=.1, layer = 'fc7', weight_decay=weight_decay)
+    outputs['fc8'] = fc(outputs['fc7'],1000, activation=None, dropout=None, bias=0, layer = 'fc8', weight_decay=weight_decay)
 
     outputs['pred'] = outputs['fc8']
     
@@ -76,6 +78,7 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     outputs = inputs
     dropout = .5 if train else None
     batch_size = inputs['images'].get_shape().as_list()[0]
+    weight_decay = 0.0005
 
     # rotations
     rotation_labels = np.random.randint(0, 4, batch_size,dtype='int32')
@@ -94,27 +97,27 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
     ### YOUR CODE HERE
 
     # set up all layer outputs
-    outputs['conv1'],outputs['conv1_kernel']  = conv(input_to_network, 96, 11, 4, padding='VALID', layer = 'conv1')
+    outputs['conv1'],outputs['conv1_kernel']  = conv(input_to_network, 96, 11, 4, padding='VALID', layer = 'conv1', weight_decay=weight_decay)
     lrn1 = outputs['conv1']
     if norm:
         lrn1 = lrn(outputs['conv1'], depth_radius=5, bias=1, alpha=.0001, beta=.75, layer='conv1')
     outputs['pool1'] = max_pool(lrn1, 3, 2, layer = 'pool1')
     
     
-    outputs['conv2'], outputs['conv2_kernel'] = conv(outputs['pool1'], 256, 5, 1, layer = 'conv2')
+    outputs['conv2'], outputs['conv2_kernel'] = conv(outputs['pool1'], 256, 5, 1, layer = 'conv2', weight_decay=weight_decay)
     lrn2 = outputs['conv2']
     if norm:
         lrn2 = lrn(outputs['conv2'], depth_radius=5, bias=1, alpha=.0001, beta=.75, layer='conv2')
 
     outputs['pool2'] = max_pool(lrn2, 3, 2, layer = 'pool2')
-    outputs['conv3'],outputs['conv3_kernel'] = conv(outputs['pool2'], 384, 3, 1, layer = 'conv3')
-    outputs['conv4'],outputs['conv4_kernel'] = conv(outputs['conv3'], 384, 3, 1, layer = 'conv4')
-    outputs['conv5'],outputs['conv5_kernel'] = conv(outputs['conv4'], 256, 3, 1, layer = 'conv5')
+    outputs['conv3'],outputs['conv3_kernel'] = conv(outputs['pool2'], 384, 3, 1, layer = 'conv3', weight_decay=weight_decay)
+    outputs['conv4'],outputs['conv4_kernel'] = conv(outputs['conv3'], 384, 3, 1, layer = 'conv4', weight_decay=weight_decay)
+    outputs['conv5'],outputs['conv5_kernel'] = conv(outputs['conv4'], 256, 3, 1, layer = 'conv5', weight_decay=weight_decay)
     outputs['pool5'] = max_pool(outputs['conv5'], 3, 2, layer = 'pool5')
 
-    outputs['fc6'] = fc(outputs['pool5'], 256, dropout=dropout, bias=.1, layer = 'fc6')
-    outputs['fc7'] = fc(outputs['fc6'],256, dropout=dropout, bias=.1, layer = 'fc7')
-    outputs['fc8'] = fc(outputs['fc7'],4, activation=None, dropout=None, bias=0, layer = 'fc8')
+    outputs['fc6'] = fc(outputs['pool5'], 256, dropout=dropout, bias=.1, layer = 'fc6', weight_decay=weight_decay)
+    outputs['fc7'] = fc(outputs['fc6'],256, dropout=dropout, bias=.1, layer = 'fc7', weight_decay=weight_decay)
+    outputs['fc8'] = fc(outputs['fc7'],4, activation=None, dropout=None, bias=0, layer = 'fc8', weight_decay=weight_decay)
 
     outputs['pred_rotation'] = outputs['fc8']
     

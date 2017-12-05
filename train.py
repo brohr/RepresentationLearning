@@ -9,10 +9,7 @@ import tensorflow as tf
 from tfutils import base, data, model, optimizer, utils
 from dataprovider import ImageNetDataProvider
 from models import rotation_model
-from losses import rotation_loss
-
-def agg_loss(loss):
-    return tf.reduce_mean(loss) + tf.add_n(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
+from losses import rotation_loss, agg_loss
 
 class ImageNetExperiment():
     """
