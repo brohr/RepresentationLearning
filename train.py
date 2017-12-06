@@ -267,7 +267,7 @@ class ImageNetExperiment():
         in the respective dictionary entry.
         """
         return {'top1': tf.nn.in_top_k(outputs['pred_rotation'], outputs['labels_rotation'], 1),
-                'top5': tf.nn.in_top_k(outputs['pred_rotation'], outputs['labels_rotation'], 2)}
+                'top2': tf.nn.in_top_k(outputs['pred_rotation'], outputs['labels_rotation'], 2)}
 
 
     def subselect_tfrecords(self, path):
