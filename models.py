@@ -186,7 +186,7 @@ def multitask_model(inputs, train=True, norm=True, **kwargs):
     outputs['labels_rotation'] = rotation_labels
     outputs['labels'] = tf.concat([inputs['labels'], inputs['labels'], inputs['labels'], inputs['labels']], 0)
     # set up all layer outputs
-    outputs['conv1'],outputs['conv1_kernel']  = conv(outputs['images'], 96, 11, 4, padding='VALID', layer = 'conv1', weight_decay=weight_decay)
+    outputs['conv1'],outputs['conv1_kernel']  = conv(input_to_network, 96, 11, 4, padding='VALID', layer = 'conv1', weight_decay=weight_decay)
     lrn1 = outputs['conv1']
     if norm:
         lrn1 = lrn(outputs['conv1'], depth_radius=5, bias=1, alpha=.0001, beta=.75, layer='conv1')
