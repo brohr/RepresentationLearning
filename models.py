@@ -99,7 +99,7 @@ def rotation_model(inputs, train=True, norm=True, **kwargs):
         inputs['images'],
         3 * 1.5708, # roation in radians
     )
-    input_to_network = tf.concat([inputs['images'], ims1, ims2, ims3])
+    input_to_network = tf.concat([inputs['images'], ims1, ims2, ims3], 0)
     rotation_labels = np.concatenate((
         np.array([0] * batch_size, dtype = np.int32),
         np.array([1] * batch_size, dtype = np.int32),
@@ -176,7 +176,7 @@ def multitask_model(inputs, train=True, norm=True, **kwargs):
         inputs['images'],
         3 * 1.5708, # roation in radians
     )
-    input_to_network = tf.concat([inputs['images'], ims1, ims2, ims3])
+    input_to_network = tf.concat([inputs['images'], ims1, ims2, ims3], 0)
     rotation_labels = np.concatenate((
         np.array([0] * batch_size, dtype = np.int32),
         np.array([1] * batch_size, dtype = np.int32),
