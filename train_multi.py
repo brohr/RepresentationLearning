@@ -224,7 +224,7 @@ class ImageNetExperiment():
             'port': 24444,
             'dbname': 'imagenet',
             'collname': 'multitask',
-            'exp_id': 'exp1',
+            'exp_id': 'exp2',
             'save_valid_freq': 5000,
             'save_filters_freq': 5000,
             'cache_filters_freq': 5000,
@@ -248,7 +248,7 @@ class ImageNetExperiment():
             'port': 24444,
             'dbname': 'imagenet',
             'collname': 'multitask',
-            'exp_id': 'exp1',
+            'exp_id': 'exp2',
             'do_restore': True,
             'load_query': None,
         }
