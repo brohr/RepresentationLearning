@@ -453,7 +453,7 @@ class NeuralDataExperiment():
 
             except:
                 retval['rdm_%s' % layer] = np.nan
-        retval['spearman_corrcoef_%s' % layer] = np.nan
+                retval['spearman_corrcoef_%s' % layer] = np.nan
    
             # categorization test
             retval['categorization_%s' % layer] = \
