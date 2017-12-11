@@ -5,7 +5,6 @@ CIFAR-10-Test/cifar-10-batches-py/
 
 CIFAR-10-Test/cifar-10-python\.tar\.gz
 
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

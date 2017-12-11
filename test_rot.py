@@ -70,17 +70,21 @@ class NeuralDataExperiment():
         You will have to EDIT this part. Please set your exp_id here.
         """
         target_layers = [
+            'conv1',
             'pool1',
-            'pool2', 
-            'fc6', 
+            'conv2',
+            'pool2',
+            'conv3',
+            'conv4',
+            'conv5',
+            'pool5',
+            'fc6',
             'fc7',
             'fc8',
-            'conv1',
-            'conv2',
             ]
 
         extraction_step = None
-        exp_id = 'experiment_1'
+        exp_id = 'exp2'
         data_path = '/datasets/neural_data/tfrecords_with_meta'
         noise_estimates_path = '/datasets/neural_data/noise_estimates.npy'
         batch_size = 128
@@ -88,7 +92,7 @@ class NeuralDataExperiment():
         crop_size = 227
         gfs_targets = [] 
         extraction_targets = [attr[0] for attr in NeuralDataProvider.ATTRIBUTES] \
-            + target_layers + ['conv1_kernel']
+            + target_layers# + ['conv1_kernel']
         assert NeuralDataProvider.N_VAL % batch_size == 0, \
                 ('number of examples not divisible by batch size!')
         val_steps = int(NeuralDataProvider.N_VAL / batch_size)
@@ -510,9 +514,8 @@ if __name__ == '__main__':
         ['V6'],
     ]
     models = [
-        (alexnet_model, 'alexnet' ,'alexnet.files'),
-        #(tiny_model, 'tinynet', 'tinynet.files'), #uncomment when ready
-        #(v1_model, 'v1_model'),
+        #(alexnet_model, 'alexnet' ,'alexnet.files'),
+        (rotation_model, 'rotation' ,'rotation.files'),
     ]
     quantiles = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.]
     training_points = {
