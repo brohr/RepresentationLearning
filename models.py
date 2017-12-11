@@ -157,34 +157,37 @@ def multitask_model(inputs, train=True, norm=True, **kwargs):
     batch_size = inputs['images'].get_shape().as_list()[0]
     weight_decay = 0.0005
 
-    # rotations
-    #rotation_labels = np.random.randint(0, 4, batch_size,dtype='int32')
-    #rotation_labels = np.array([0,1,2,3] * batch_size, dtype = np.int32)
-    #input_to_network = tf.contrib.image.rotate(
-    #    inputs['images'],
-    #    rotation_labels * 1.5708, # roation in radians
-    #    )
-    ims1 = tf.contrib.image.rotate(
-        inputs['images'],
-        1 * 1.5708, # roation in radians
-    )
-    ims2 = tf.contrib.image.rotate(
-        inputs['images'],
-        2 * 1.5708, # roation in radians
-    )
-    ims3 = tf.contrib.image.rotate(
-        inputs['images'],
-        3 * 1.5708, # roation in radians
-    )
-    input_to_network = tf.concat([inputs['images'], ims1, ims2, ims3], 0)
-    rotation_labels = np.concatenate((
-        np.array([0] * batch_size, dtype = np.int32),
-        np.array([1] * batch_size, dtype = np.int32),
-        np.array([2] * batch_size, dtype = np.int32),
-        np.array([3] * batch_size, dtype = np.int32),
-        ))
-    outputs['labels_rotation'] = rotation_labels
-    outputs['labels'] = tf.concat([inputs['labels'], inputs['labels'], inputs['labels'], inputs['labels']], 0)
+    if train:
+    	# rotations
+    	#rotation_labels = np.random.randint(0, 4, batch_size,dtype='int32')
+    	#rotation_labels = np.array([0,1,2,3] * batch_size, dtype = np.int32)
+    	#input_to_network = tf.contrib.image.rotate(
+    	#    inputs['images'],
+    	#    rotation_labels * 1.5708, # roation in radians
+    	#    )
+    	ims1 = tf.contrib.image.rotate(
+    	    inputs['images'],
+    	    1 * 1.5708, # roation in radians
+    	)
+    	ims2 = tf.contrib.image.rotate(
+    	    inputs['images'],
+    	    2 * 1.5708, # roation in radians
+    	)
+    	ims3 = tf.contrib.image.rotate(
+    	    inputs['images'],
+    	    3 * 1.5708, # roation in radians
+    	)
+    	input_to_network = tf.concat([inputs['images'], ims1, ims2, ims3], 0)
+    	rotation_labels = np.concatenate((
+    	    np.array([0] * batch_size, dtype = np.int32),
+    	    np.array([1] * batch_size, dtype = np.int32),
+    	    np.array([2] * batch_size, dtype = np.int32),
+    	    np.array([3] * batch_size, dtype = np.int32),
+    	    ))
+    	outputs['labels_rotation'] = rotation_labels
+    	outputs['labels'] = tf.concat([inputs['labels'], inputs['labels'], inputs['labels'], inputs['labels']], 0)
+    else:
+    	input_to_network = inputs['images']
     # set up all layer outputs
     outputs['conv1'],outputs['conv1_kernel']  = conv(input_to_network, 96, 11, 4, padding='VALID', layer = 'conv1', weight_decay=weight_decay)
     lrn1 = outputs['conv1']

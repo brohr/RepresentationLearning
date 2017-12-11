@@ -40,7 +40,7 @@ from tfutils import base, data, model, optimizer, utils
 
 from utils import post_process_neural_regression_msplit_preprocessed
 from dataprovider import NeuralDataProvider
-from models import alexnet_model, tiny_model 
+from models import multitask_model#alexnet_model, tiny_model 
 
 import math
 
@@ -70,24 +70,24 @@ class NeuralDataExperiment():
         You will have to EDIT this part. Please set your exp_id here.
         """
         target_layers = [
-            'conv1',
+            #'conv1',
             'pool1',
             'conv2',
-            'pool2',
+            #'pool2',
             'conv3',
             'conv4',
             'conv5',
             'pool5',
             'fc6',
             'fc7',
-            'fc8',
+            #'fc8',
             ]
 
         extraction_step = None
         exp_id = 'exp2'
         data_path = '/datasets/neural_data/tfrecords_with_meta'
         noise_estimates_path = '/datasets/neural_data/noise_estimates.npy'
-        batch_size = 128
+        batch_size = 64
         seed = 6
         crop_size = 227
         gfs_targets = [] 
@@ -98,7 +98,7 @@ class NeuralDataExperiment():
         val_steps = int(NeuralDataProvider.N_VAL / batch_size)
 
 
-    def setup_params(self, model = alexnet_model, image_set = ['V0','V3','V6'], extraction_step = None):
+    def setup_params(self, model = None, image_set = ['V0','V3','V6'], extraction_step = None):
         """
         This function illustrates how to setup up the parameters for train_from_params
         """

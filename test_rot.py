@@ -40,7 +40,7 @@ from tfutils import base, data, model, optimizer, utils
 
 from utils import post_process_neural_regression_msplit_preprocessed
 from dataprovider import NeuralDataProvider
-from models import alexnet_model, tiny_model 
+from models import rotation_model, multitask_model#alexnet_model, tiny_model 
 
 import math
 
@@ -70,24 +70,24 @@ class NeuralDataExperiment():
         You will have to EDIT this part. Please set your exp_id here.
         """
         target_layers = [
-            'conv1',
+            #'conv1',
             'pool1',
-            'conv2',
-            'pool2',
-            'conv3',
-            'conv4',
+            #'conv2',
+            #'pool2',
+            #'conv3',
+            #'conv4',
             'conv5',
             'pool5',
             'fc6',
             'fc7',
-            'fc8',
+            #'fc8',
             ]
 
         extraction_step = None
         exp_id = 'exp2'
         data_path = '/datasets/neural_data/tfrecords_with_meta'
         noise_estimates_path = '/datasets/neural_data/noise_estimates.npy'
-        batch_size = 128
+        batch_size = 32
         seed = 6
         crop_size = 227
         gfs_targets = [] 
@@ -98,7 +98,7 @@ class NeuralDataExperiment():
         val_steps = int(NeuralDataProvider.N_VAL / batch_size)
 
 
-    def setup_params(self, model = alexnet_model, image_set = ['V0','V3','V6'], extraction_step = None):
+    def setup_params(self, model = None, image_set = ['V0','V3','V6'], extraction_step = None):
         """
         This function illustrates how to setup up the parameters for train_from_params
         """
@@ -426,7 +426,7 @@ class NeuralDataExperiment():
         You will need to EDIT this function to fully complete the assignment.
         Add the necessary analyses as specified in the assignment pdf.
         """
-        retval = {'conv1_kernel': results['conv1_kernel']}
+        retval = {}#'conv1_kernel': results['conv1_kernel']}
         print('Performing neural analysis...')
         meta = self.parse_meta_data(results)
         features, IT_feats = self.get_features(results, num_subsampled_features=1024)
@@ -437,17 +437,22 @@ class NeuralDataExperiment():
         for layer in features:
             
             print('Layer: %s' % layer)
-            # RDM
-            retval['rdm_%s' % layer] = \
-                    self.compute_rdm(features[layer], meta, mean_objects=True)
+            try:
+            	# RDM
+            	retval['rdm_%s' % layer] = \
+                    	self.compute_rdm(features[layer], meta, mean_objects=True)
                 
-            # RDM correlation
-            retval['spearman_corrcoef_%s' % layer] = \
-                    spearmanr(
-                            np.reshape(retval['rdm_%s' % layer], [-1]),
-                            np.reshape(retval['rdm_it'], [-1])
-                            )[0]
-                
+            	# RDM correlation
+            	retval['spearman_corrcoef_%s' % layer] = \
+                    	spearmanr(
+                            	np.reshape(retval['rdm_%s' % layer], [-1]),
+                            	np.reshape(retval['rdm_it'], [-1])
+                            	)[0]
+
+            except:
+            	retval['rdm_%s' % layer] = np.nan
+		retval['spearman_corrcoef_%s' % layer] = np.nan
+   
             # categorization test
             retval['categorization_%s' % layer] = \
                     self.categorization_test(features[layer], meta)
@@ -514,7 +519,7 @@ if __name__ == '__main__':
         ['V6'],
     ]
     models = [
-        #(alexnet_model, 'alexnet' ,'alexnet.files'),
+        #(multitask_model, 'multitask' ,'multitask.files'),
         (rotation_model, 'rotation' ,'rotation.files'),
     ]
     quantiles = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.]
