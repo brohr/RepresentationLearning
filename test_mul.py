@@ -40,7 +40,7 @@ from tfutils import base, data, model, optimizer, utils
 
 from utils import post_process_neural_regression_msplit_preprocessed
 from dataprovider import NeuralDataProvider
-from models import multitask_model#alexnet_model, tiny_model 
+from models import rotation_model, multitask_model#alexnet_model, tiny_model 
 
 import math
 
@@ -72,14 +72,16 @@ class NeuralDataExperiment():
         target_layers = [
             #'conv1',
             'pool1',
-            'conv2',
+            #'conv2',
             #'pool2',
-            'conv3',
-            'conv4',
+            #'conv3',
+            #'conv4',
             'conv5',
             'pool5',
-            'fc6',
-            'fc7',
+            'fc6_rot',
+            'fc6_clf',
+            'fc7_rot',
+            'fc7_clf',
             #'fc8',
             ]
 
@@ -87,12 +89,12 @@ class NeuralDataExperiment():
         exp_id = 'exp2'
         data_path = '/datasets/neural_data/tfrecords_with_meta'
         noise_estimates_path = '/datasets/neural_data/noise_estimates.npy'
-        batch_size = 64
+        batch_size = 32
         seed = 6
         crop_size = 227
         gfs_targets = [] 
         extraction_targets = [attr[0] for attr in NeuralDataProvider.ATTRIBUTES] \
-            + target_layers #+ ['conv1_kernel']
+            + target_layers# + ['conv1_kernel']
         assert NeuralDataProvider.N_VAL % batch_size == 0, \
                 ('number of examples not divisible by batch size!')
         val_steps = int(NeuralDataProvider.N_VAL / batch_size)
@@ -437,17 +439,22 @@ class NeuralDataExperiment():
         for layer in features:
             
             print('Layer: %s' % layer)
-            # RDM
-            retval['rdm_%s' % layer] = \
-                    self.compute_rdm(features[layer], meta, mean_objects=True)
+            try:
+                # RDM
+                retval['rdm_%s' % layer] = \
+                        self.compute_rdm(features[layer], meta, mean_objects=True)
                 
-            # RDM correlation
-            retval['spearman_corrcoef_%s' % layer] = \
-                    spearmanr(
-                            np.reshape(retval['rdm_%s' % layer], [-1]),
-                            np.reshape(retval['rdm_it'], [-1])
-                            )[0]
-                
+                # RDM correlation
+                retval['spearman_corrcoef_%s' % layer] = \
+                        spearmanr(
+                                np.reshape(retval['rdm_%s' % layer], [-1]),
+                                np.reshape(retval['rdm_it'], [-1])
+                                )[0]
+
+            except:
+                retval['rdm_%s' % layer] = np.nan
+        retval['spearman_corrcoef_%s' % layer] = np.nan
+   
             # categorization test
             retval['categorization_%s' % layer] = \
                     self.categorization_test(features[layer], meta)
@@ -514,8 +521,8 @@ if __name__ == '__main__':
         ['V6'],
     ]
     models = [
-        #(alexnet_model, 'alexnet' ,'alexnet.files'),
         (multitask_model, 'multitask' ,'multitask.files'),
+        #(rotation_model, 'rotation' ,'rotation.files'),
     ]
     quantiles = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.]
     training_points = {
