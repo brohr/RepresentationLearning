@@ -34,10 +34,27 @@ def alexnet_model(inputs, train=True, norm=True, **kwargs):
     input_to_network = inputs['images']
     weight_decay = 0.0005
 
-    ### YOUR CODE HERE
+    if train:
+        ims1 = tf.contrib.image.rotate(
+            inputs['images'],
+            1 * 1.5708, # roation in radians
+        )
+        ims2 = tf.contrib.image.rotate(
+            inputs['images'],
+            2 * 1.5708, # roation in radians
+        )
+        ims3 = tf.contrib.image.rotate(
+            inputs['images'],
+            3 * 1.5708, # roation in radians
+        )
+        input_to_network = tf.concat([inputs['images'], ims1, ims2, ims3], 0)
+        outputs['labels'] = tf.concat([inputs['labels'], inputs['labels'], inputs['labels'], inputs['labels']], 0)
+    else:
+        input_to_network = inputs['images']
+        outputs['labels'] = inputs['labels']
 
     # set up all layer outputs
-    outputs['conv1'],outputs['conv1_kernel']  = conv(outputs['images'], 96, 11, 4, 
+    outputs['conv1'],outputs['conv1_kernel']  = conv(input_to_network, 96, 11, 4, 
         padding='VALID', layer = 'conv1', weight_decay=weight_decay)
     lrn1 = outputs['conv1']
     if norm:
@@ -188,6 +205,7 @@ def multitask_model(inputs, train=True, norm=True, **kwargs):
     	outputs['labels'] = tf.concat([inputs['labels'], inputs['labels'], inputs['labels'], inputs['labels']], 0)
     else:
     	input_to_network = inputs['images']
+        outputs['labels'] = inputs['labels']
     # set up all layer outputs
     outputs['conv1'],outputs['conv1_kernel']  = conv(input_to_network, 96, 11, 4, padding='VALID', layer = 'conv1', weight_decay=weight_decay)
     lrn1 = outputs['conv1']
