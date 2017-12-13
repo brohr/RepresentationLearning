@@ -223,7 +223,7 @@ class ImageNetExperiment():
             'host': 'localhost',
             'port': 24444,
             'dbname': 'imagenet',
-            'collname': 'multitask',
+            'collname': 'classification',
             'exp_id': 'exp2',
             'save_valid_freq': 5000,
             'save_filters_freq': 5000,
@@ -247,7 +247,7 @@ class ImageNetExperiment():
             'host': 'localhost',
             'port': 24444,
             'dbname': 'imagenet',
-            'collname': 'multitask',
+            'collname': 'classification',
             'exp_id': 'exp2',
             'do_restore': True,
             'load_query': None,
@@ -267,8 +267,6 @@ class ImageNetExperiment():
         in the respective dictionary entry.
         """
         return {
-            'top1_rot': tf.nn.in_top_k(outputs['pred_rotation'], outputs['labels_rotation'], 1),
-            'top2_rot': tf.nn.in_top_k(outputs['pred_rotation'], outputs['labels_rotation'], 2),
             'top1_clf': tf.nn.in_top_k(outputs['pred'], outputs['labels'], 1),
             'top5_clf': tf.nn.in_top_k(outputs['pred'], outputs['labels'], 5),
         }
