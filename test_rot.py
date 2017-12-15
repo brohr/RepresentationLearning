@@ -485,7 +485,7 @@ class NeuralDataExperiment():
 
         return retval
 
-def get_relevant_steps(modelname, quantiles):
+def get_relevant_steps(modelname, quantiles, exp_id):
     # get connection
     port = 24444
     host = 'localhost'
@@ -493,7 +493,9 @@ def get_relevant_steps(modelname, quantiles):
     coll = connection['imagenet'][modelname]
     # obtain max steps
     query = {
-        'step':{'$exists':True}, 
+        'exp_id': exp_id,
+        'step':{'$exists':True},
+        'validation_results' : {'$exists' : True}, 
         #'validates': {'$exists': False},
         'saved_filters': True,
         }
@@ -522,9 +524,10 @@ if __name__ == '__main__':
         #(multitask_model, 'multitask' ,'multitask.files'),
         (rotation_model, 'rotation' ,'rotation.files'),
     ]
-    quantiles = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.]
+    quantiles = [1., 0.75, 0.5, 0.25]
+    expid = 'exp2'
     training_points = {
-        model[1]: get_relevant_steps(model[2], quantiles) for model in models
+        model[1]: get_relevant_steps(model[2], quantiles, expid) for model in models
     }
     
     

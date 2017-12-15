@@ -524,7 +524,7 @@ if __name__ == '__main__':
         (multitask_model, 'multitask' ,'multitask.files'),
         #(rotation_model, 'rotation' ,'rotation.files'),
     ]
-    quantiles = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.]
+    quantiles = [1., 0.7, 0.5, 0.25]
     training_points = {
         model[1]: get_relevant_steps(model[2], quantiles) for model in models
     }
